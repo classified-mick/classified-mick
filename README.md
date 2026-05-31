@@ -63,12 +63,16 @@
 ## 📈 GitHub Activity
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=classified-mick&show_icons=true&hide_border=true&title_color=39D353&icon_color=39D353&text_color=C9D1D9&bg_color=0d1117" height="170" alt="stats"/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=classified-mick&layout=compact&hide_border=true&title_color=39D353&text_color=C9D1D9&bg_color=0d1117" height="170" alt="top langs"/>
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=classified-mick&theme=vue_dark" alt="stats"/>
 </p>
 
 <p align="center">
-  <img src="https://github-readme-streak-stats.demolab.com/?user=classified-mick&theme=dark&hide_border=true&ring=39D353&fire=39D353&currStreakLabel=39D353&sideLabels=C9D1D9&dates=C9D1D9&currStreakNum=ffffff&sideNums=ffffff" alt="streak"/>
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=classified-mick&theme=vue_dark" alt="top langs"/>
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=classified-mick&theme=vue_dark" alt="most used language"/>
+</p>
+
+<p align="center">
+  <img src="https://streak-stats.demolab.com/?user=classified-mick&theme=dark&hide_border=true&ring=39D353&fire=39D353&currStreakLabel=39D353&sideLabels=C9D1D9&dates=C9D1D9&currStreakNum=ffffff&sideNums=ffffff" alt="streak"/>
 </p>
 
 <p align="center">
