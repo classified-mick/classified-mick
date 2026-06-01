@@ -20,18 +20,18 @@
 
 ---
 
-## 👨‍💻 About Me
+## About Me
 
-- 🎓 **Cybersecurity student at SETU** (South East Technological University)
-- 🛡️ Into **security, networking, and reverse engineering** — Wireshark, Ghidra, and Burp Suite are my playground
-- 🚀 **I love catching every opportunity I see** — always up for a new challenge or project
-- 🤝 **Strong team player** — I enjoy building things with people and pulling my weight in a group
-- 🧩 I like **breaking problems down** and figuring out how systems really work under the hood
-- 🌱 Currently leveling up and shipping projects — **a lot more coming soon**
+-  **Cybersecurity student at SETU** (South East Technological University)
+-  Into **security, networking, and reverse engineering** — Wireshark, Ghidra, and Burp Suite are my playground
+-  **I love catching every opportunity I see** — always up for a new challenge or project
+-  **Strong team player** — I enjoy building things with people and pulling my weight in a group
+-  I like **breaking problems down** and figuring out how systems really work under the hood
+-  Currently leveling up and shipping projects — **a lot more coming soon**
 
 ---
 
-## 🛠️ Tech & Tools
+## Tech & Tools
 
 **Languages**
 
@@ -60,7 +60,7 @@
 
 ---
 
-## 📈 GitHub Activity
+## GitHub Activity
 
 <p align="center">
   <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=classified-mick&theme=vue_dark" alt="stats"/>
