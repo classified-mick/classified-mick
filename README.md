@@ -63,12 +63,8 @@
 ## GitHub Activity
 
 <p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=classified-mick&theme=vue_dark" alt="stats"/>
-</p>
-
-<p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=classified-mick&theme=vue_dark" alt="top langs"/>
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=classified-mick&theme=vue_dark" alt="most used language"/>
+  <img src="https://github-readme-stats.vercel.app/api?username=classified-mick&show_icons=true&hide_border=true&include_all_commits=true&count_private=true&title_color=39D353&icon_color=39D353&text_color=c9d1d9&bg_color=0d1117" alt="stats" height="170"/>
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=classified-mick&layout=compact&hide_border=true&langs_count=8&title_color=39D353&text_color=c9d1d9&bg_color=0d1117" alt="top languages" height="170"/>
 </p>
 
 <p align="center">
