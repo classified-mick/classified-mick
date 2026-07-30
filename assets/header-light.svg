@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="150" viewBox="0 0 880 150" role="img" aria-label="Mykhailo Kholiev">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#39D353" stop-opacity="0.16"/>
+      <stop offset="55%" stop-color="#39D353" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#f6f8fa" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="880" height="150" rx="12" fill="#f6f8fa" stroke="#d0d7de"/>
+  <rect width="880" height="150" rx="12" fill="url(#g)"/>
+  <rect x="0" y="0" width="4" height="150" rx="2" fill="#39D353"/>
+  <text x="40" y="58" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="30" font-weight="700" fill="#1f2328">Mykhailo Kholiev</text>
+  <text x="40" y="88" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="15" fill="#39D353">Cybersecurity student at SETU</text>
+  <text x="40" y="115" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#59636e">Security, networking and reverse engineering &#183; always building something on the side.</text>
+</svg>

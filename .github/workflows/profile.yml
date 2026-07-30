@@ -1,0 +1,63 @@
+name: Refresh profile cards
+
+# Rebuilds the SVG cards in assets/ once a day and commits them, so the numbers on
+# the profile are never stale and never need touching by hand.
+#
+# One-time setup: a personal access token has to be stored as the repository secret
+# PROFILE_TOKEN. The automatic GITHUB_TOKEN cannot see private-repository
+# contributions, so with it the totals would collapse to the public-only figure.
+# If the secret is missing the job stops without committing, which leaves the last
+# good cards in place rather than replacing them with wrong ones.
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-cards
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the token is configured
+        env:
+          PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
+        run: |
+          if [ -z "$PROFILE_TOKEN" ]; then
+            echo "::notice::PROFILE_TOKEN is not set - skipping. The cards keep their current values."
+            echo "skip=true" >> "$GITHUB_ENV"
+          else
+            echo "skip=false" >> "$GITHUB_ENV"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: env.skip == 'false'
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild the cards
+        if: env.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.PROFILE_TOKEN }}
+        run: python tools/build_profile.py
+
+      - name: Commit if anything changed
+        if: env.skip == 'false'
+        run: |
+          git config user.name  "Mykhailo Kholiev"
+          git config user.email "classifiedprofi@gmail.com"
+          if git diff --quiet -- assets; then
+            echo "cards unchanged, nothing to commit"
+            exit 0
+          fi
+          git add assets
+          git commit -m "Refresh profile cards"
+          git push
