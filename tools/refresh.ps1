@@ -37,19 +37,28 @@ if ($LASTEXITCODE -ne 0) {
     throw "build_profile.py exited $LASTEXITCODE - cards left untouched"
 }
 
-if (-not (& git status --porcelain -- assets)) {
-    Write-Output "cards unchanged, nothing to commit"
+if (& git status --porcelain -- assets) {
+    Invoke-Git @('config', 'user.name',  'Mykhailo Kholiev')
+    Invoke-Git @('config', 'user.email', 'classifiedprofi@gmail.com')
+    Invoke-Git @('add', '--', 'assets')
+    Invoke-Git @('commit', '-q', '-m', 'Refresh profile cards')
+    Write-Output "cards changed, committed"
+} else {
+    Write-Output "cards unchanged"
+}
+
+# Push on "the branch is ahead", not on "I just committed". A previous run that
+# was told not to push, or that died after committing, would otherwise leave the
+# commit stranded here forever while every later run reported success.
+$ahead = (& git rev-list --count 'origin/main..HEAD').Trim()
+if ($ahead -eq '0') {
+    Write-Output "nothing to push"
     exit 0
 }
 
-Invoke-Git @('config', 'user.name',  'Mykhailo Kholiev')
-Invoke-Git @('config', 'user.email', 'classifiedprofi@gmail.com')
-Invoke-Git @('add', '--', 'assets')
-Invoke-Git @('commit', '-q', '-m', 'Refresh profile cards')
-
-if (-not $NoPush) {
-    Invoke-Git @('push', '--quiet', 'origin', 'main')
-    Write-Output "cards refreshed and pushed"
+if ($NoPush) {
+    Write-Output "$ahead commit(s) ready, push skipped"
 } else {
-    Write-Output "cards refreshed, push skipped"
+    Invoke-Git @('push', '--quiet', 'origin', 'main')
+    Write-Output "pushed $ahead commit(s)"
 }
