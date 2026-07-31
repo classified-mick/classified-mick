@@ -66,7 +66,7 @@
   </picture>
 </p>
 
-<sub>These cards are rebuilt every day by a scheduled workflow and committed here, so GitHub
+<sub>These cards are rebuilt daily and committed here, so GitHub
 serves them itself — no third-party card service that can rate-limit and leave a broken image
 behind, and nothing to refresh by hand.</sub>
 
