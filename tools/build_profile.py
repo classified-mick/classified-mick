@@ -251,12 +251,35 @@ def card_header(data: dict, theme: str) -> str:
 
 
 def main() -> int:
+    force = "--force" in sys.argv
     ASSETS.mkdir(parents=True, exist_ok=True)
     print("querying github...")
     data = fetch()
     cur, longest = streaks(data["days"])
     print(f"  {data['total']} contributions, streak {cur}, longest {longest}, "
           f"{data['repos']} repos, {len(data['langs'])} languages")
+
+    # Guard against a token that authenticates but cannot see private contributions:
+    # the totals would collapse and quietly overwrite good cards with wrong ones.
+    # A real drop of more than a fifth in a day is not possible - the window only
+    # moves by one day - so treat it as a broken credential, not as new data.
+    state = ASSETS / "last.json"
+    if state.exists() and not force:
+        try:
+            previous = json.loads(state.read_text(encoding="utf-8")).get("total", 0)
+        except (OSError, ValueError):
+            previous = 0
+        if previous and data["total"] < previous * 0.8:
+            print(f"refusing to write: total fell {previous} -> {data['total']}.", file=sys.stderr)
+            print("that is the signature of a token without read:user, so private "
+                  "contributions came back as zero. cards left untouched.", file=sys.stderr)
+            print("re-run with --force if the drop is genuine.", file=sys.stderr)
+            return 3
+
+    state.write_text(json.dumps({
+        "total": data["total"], "streak": cur, "longest": longest,
+        "repos": data["repos"], "generated": dt.date.today().isoformat(),
+    }, indent=2), encoding="utf-8")
 
     for theme in THEMES:
         (ASSETS / f"header-{theme}.svg").write_text(card_header(data, theme), encoding="utf-8")
