@@ -68,7 +68,8 @@ def esc(s: str) -> str:
 
 def fetch() -> dict:
     today = dt.date.today()
-    start = dt.date(today.year, 1, 1)
+    year_start = dt.date(today.year, 1, 1)
+    activity_start = today - dt.timedelta(days=364)
 
     q = """
     {
@@ -87,25 +88,33 @@ def fetch() -> dict:
             }
           }
         }
-        contributionsCollection(from: "%sT00:00:00Z", to: "%sT23:59:59Z") {
+        yearContributions: contributionsCollection(from: "%sT00:00:00Z", to: "%sT23:59:59Z") {
           totalCommitContributions
           totalPullRequestContributions
           totalIssueContributions
           restrictedContributionsCount
           contributionCalendar {
             totalContributions
+          }
+        }
+        recentActivity: contributionsCollection(from: "%sT00:00:00Z", to: "%sT23:59:59Z") {
+          contributionCalendar {
             weeks { contributionDays { date contributionCount } }
           }
         }
       }
     }
-    """ % (start.isoformat(), today.isoformat())
+    """ % (
+        year_start.isoformat(), today.isoformat(),
+        activity_start.isoformat(), today.isoformat(),
+    )
 
     v = gh_graphql(q)["viewer"]
-    cc = v["contributionsCollection"]
+    year_cc = v["yearContributions"]
+    recent_cc = v["recentActivity"]
 
     days = []
-    for w in cc["contributionCalendar"]["weeks"]:
+    for w in recent_cc["contributionCalendar"]["weeks"]:
         for d in w["contributionDays"]:
             days.append((dt.date.fromisoformat(d["date"]), d["contributionCount"]))
     days.sort()
@@ -124,10 +133,10 @@ def fetch() -> dict:
         "followers": v["followers"]["totalCount"],
         "repos": v["repositories"]["totalCount"],
         "stars": stars,
-        "total": cc["contributionCalendar"]["totalContributions"],
-        "commits": cc["totalCommitContributions"] + cc["restrictedContributionsCount"],
-        "prs": cc["totalPullRequestContributions"],
-        "issues": cc["totalIssueContributions"],
+        "total": year_cc["contributionCalendar"]["totalContributions"],
+        "commits": year_cc["totalCommitContributions"] + year_cc["restrictedContributionsCount"],
+        "prs": year_cc["totalPullRequestContributions"],
+        "issues": year_cc["totalIssueContributions"],
         "days": days,
         "langs": dict(sorted(langs.items(), key=lambda kv: -kv[1])),
     }
