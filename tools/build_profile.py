@@ -68,7 +68,7 @@ def esc(s: str) -> str:
 
 def fetch() -> dict:
     today = dt.date.today()
-    start = today - dt.timedelta(days=364)
+    start = dt.date(today.year, 1, 1)
 
     q = """
     {
@@ -120,6 +120,7 @@ def fetch() -> dict:
     return {
         "login": v["login"],
         "name": v["name"] or v["login"],
+        "year": today.year,
         "followers": v["followers"]["totalCount"],
         "repos": v["repositories"]["totalCount"],
         "stars": stars,
@@ -188,7 +189,7 @@ def card_stats(data: dict, theme: str) -> str:
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="GitHub activity">
   <rect width="{W}" height="{H}" rx="10" fill="{t['panel']}" stroke="{t['border']}"/>
   <text x="26" y="38" font-family="{FONT}" font-size="15" font-weight="600" fill="{ACCENT}">GitHub activity</text>
-  <text x="26" y="56" font-family="{FONT}" font-size="11" fill="{t['dim']}">last 12 months, private contributions included</text>
+  <text x="26" y="56" font-family="{FONT}" font-size="11" fill="{t['dim']}">{data['year']} total, private contributions included</text>
   {stat(90, str(data['total']), 'contributions')}
   {stat(215, str(cur), 'day streak')}
   {stat(340, str(longest), 'longest streak')}
@@ -256,20 +257,23 @@ def main() -> int:
     print("querying github...")
     data = fetch()
     cur, longest = streaks(data["days"])
-    print(f"  {data['total']} contributions, streak {cur}, longest {longest}, "
+    print(f"  {data['total']} contributions in {data['year']}, streak {cur}, longest {longest}, "
           f"{data['repos']} repos, {len(data['langs'])} languages")
 
     # Guard against a token that authenticates but cannot see private contributions:
     # the totals would collapse and quietly overwrite good cards with wrong ones.
-    # A real drop of more than a fifth in a day is not possible - the window only
-    # moves by one day - so treat it as a broken credential, not as new data.
+    # A large drop within the same calendar year is not expected, so treat it as
+    # a broken credential. A new year is allowed to reset the total normally.
     state = ASSETS / "last.json"
     if state.exists() and not force:
         try:
-            previous = json.loads(state.read_text(encoding="utf-8")).get("total", 0)
+            previous_data = json.loads(state.read_text(encoding="utf-8"))
+            previous = previous_data.get("total", 0)
+            previous_year = previous_data.get("year")
         except (OSError, ValueError):
             previous = 0
-        if previous and data["total"] < previous * 0.8:
+            previous_year = None
+        if previous and previous_year == data["year"] and data["total"] < previous * 0.8:
             print(f"refusing to write: total fell {previous} -> {data['total']}.", file=sys.stderr)
             print("that is the signature of a token without read:user, so private "
                   "contributions came back as zero. cards left untouched.", file=sys.stderr)
@@ -278,7 +282,8 @@ def main() -> int:
 
     state.write_text(json.dumps({
         "total": data["total"], "streak": cur, "longest": longest,
-        "repos": data["repos"], "generated": dt.date.today().isoformat(),
+        "repos": data["repos"], "year": data["year"],
+        "generated": dt.date.today().isoformat(),
     }, indent=2), encoding="utf-8")
 
     for theme in THEMES:

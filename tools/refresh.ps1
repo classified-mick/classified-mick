@@ -38,10 +38,15 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 if (& git status --porcelain -- assets) {
-    Invoke-Git @('config', 'user.name',  'Mykhailo Kholiev')
-    Invoke-Git @('config', 'user.email', 'classifiedprofi@gmail.com')
     Invoke-Git @('add', '--', 'assets')
-    Invoke-Git @('commit', '-q', '-m', 'Refresh profile cards')
+    # Do not attribute the generated refresh commit to the profile owner. If it
+    # counted as their contribution, every refresh would make the freshly read
+    # total one commit stale immediately after the push.
+    Invoke-Git @(
+        '-c', 'user.name=Profile Cards Bot',
+        '-c', 'user.email=profile-cards-bot@users.noreply.github.com',
+        'commit', '-q', '-m', 'Refresh profile cards'
+    )
     Write-Output "cards changed, committed"
 } else {
     Write-Output "cards unchanged"
